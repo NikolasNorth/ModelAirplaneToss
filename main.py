@@ -1,11 +1,13 @@
 import pygame
 import sys
 
+# Define global variables
+
 
 def welcome_screen():
     """
     Show welcome screen.
-    :return:
+    :return: None
     """
     # Position of intro title
     original_title_width = GAME_TITLES['default-main'].get_width()
@@ -59,7 +61,7 @@ def welcome_screen():
 def main_game():
     """
     Run game.
-    :return:
+    :return: None
     """
     # Set background image
     background_x = 0  # Initial x-coordinate for 1st background image
