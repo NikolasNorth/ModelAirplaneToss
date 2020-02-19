@@ -1,8 +1,6 @@
 import pygame
 import sys
 
-# Define global variables
-
 
 def welcome_screen():
     """
@@ -67,7 +65,11 @@ def main_game():
     background_x = 0  # Initial x-coordinate for 1st background image
     background_x2 = SCREEN_WIDTH  # Initial x-coordinate for 2nd background image
     SCREEN.fill((0, 0, 0))
+    x_pos = 50
+    y_pos = 50
     while True:
+        key = False
+        # Display both images
         SCREEN.blit(
             pygame.transform.scale(BACKGROUNDS['default'], (SCREEN_WIDTH, SCREEN_HEIGHT)),
             (background_x, 0)
@@ -76,8 +78,14 @@ def main_game():
             pygame.transform.scale(BACKGROUNDS['default'], (SCREEN_WIDTH, SCREEN_HEIGHT)),
             (background_x2, 0)
         )
+
+        # Display airplane
+        SCREEN.blit(
+            pygame.image.load(AIRPLANES['default']).convert_alpha(),
+            (x_pos, y_pos)
+        )
         pygame.display.update()
-        background_x -= 2
+        background_x -= 2  # TODO: This is what controls the speed of the airplane flying (use this for setting different difficulty modes)
         background_x2 -= 2
         if background_x < -SCREEN_WIDTH:
             background_x = SCREEN_WIDTH
@@ -93,8 +101,13 @@ def main_game():
                     # Go back to welcome screen if user presses ESCAPE key
                     welcome_screen()
                 elif event.key == pygame.K_SPACE:
-                    print('* Airplane rises *')
-
+                    # Make airplane 'jump' to higher elevation
+                    y_pos -= 40
+                    key = True
+        if key:
+            y_pos += 0
+        else:
+            y_pos += 4
         FPS_CLOCK.tick(FPS)
 
 
