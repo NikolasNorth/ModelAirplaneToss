@@ -9,6 +9,7 @@ class Airplane:
     def __init__(self, img, x, y):
         """
         Airplane constructor.
+
         :param img: airplane image loaded with pygame.load()
         :param x: x-coordinate on game window
         :param y: y-coordinate on game window

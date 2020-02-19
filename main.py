@@ -7,7 +7,8 @@ from airplane import Airplane
 # TODO: After this function is called decrement bg_x and bg_x2 by 2
 def draw_window(window, airplane, bg_img, bg_x, bg_x2):
     """
-    Draw window for the game
+    Draw window for the game.
+
     :param window: Game window
     :param airplane: User airplane
     :param bg_img: Background image already loaded using pygame.load() function
