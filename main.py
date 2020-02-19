@@ -69,4 +69,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # TODO: Implement welcome_screen method
+    # TODO: Add logic to delay the start of the game when user presses space bar (similar to flappybird.io)
     main()
