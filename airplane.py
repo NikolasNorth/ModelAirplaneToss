@@ -71,3 +71,9 @@ class Airplane:
         rotated_img = pygame.transform.rotate(self.img, self.tilt)
         # new_rect = rotated_img.get_rect(center=self.img.get_rect(topLeft=(self.x, self.y)).center)
         window.blit(rotated_img, (self.x, self.y))
+
+    def get_mask(self):
+        """
+        :return:
+        """
+        return pygame.mask.from_surface(self.img)
