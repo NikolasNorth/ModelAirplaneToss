@@ -10,7 +10,7 @@ class Airplane:
         """
         Airplane constructor.
 
-        :param img: airplane image loaded with pygame.load()
+        :param img: airplane image loaded with pygame.image.load()
         :param x: x-coordinate on game window
         :param y: y-coordinate on game window
         """
