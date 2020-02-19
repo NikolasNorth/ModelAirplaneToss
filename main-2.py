@@ -162,7 +162,3 @@ def main():
     # Start Game
     welcome_screen()
     main_game()
-
-
-if __name__ == '__main__':
-    main()

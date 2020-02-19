@@ -60,6 +60,7 @@ class Airplane:
                 self.tilt -= self.ROTATION_VELOCITY
 
     def draw(self, window):
+        # TODO: Fix new_rect
         """
         Draw airplane on to game window and rotate it
         :param window: Game window
@@ -67,5 +68,5 @@ class Airplane:
         """
         # Rotate image around its center
         rotated_img = pygame.transform.rotate(self.img, self.tilt)
-        new_rect = rotated_img.get_rect(center=self.img.get_rect(topLeft=(self.x, self.y)).center)
-        window.blit(rotated_img, new_rect.topleft)
+        # new_rect = rotated_img.get_rect(center=self.img.get_rect(topLeft=(self.x, self.y)).center)
+        window.blit(rotated_img, (self.x, self.y))
