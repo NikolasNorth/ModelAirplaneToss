@@ -4,7 +4,7 @@ import random
 
 class Obstacle:
     # Define static variables
-    GAP = 150  # Space in between set of pipes
+    GAP = 200  # Space in between set of pipes
     VELOCITY = 5  # How fast pipe will be moving towards the bird
 
     def __init__(self, img, x):
@@ -33,6 +33,15 @@ class Obstacle:
         # Set top pipe and bottom pipe position in game window
         self.top = self.height - self.PIPE_TOP.get_height()
         self.bottom = self.height + self.GAP
+
+    def get_x(self):
+        return self.x
+
+    def get_passed(self):
+        return self.passed
+
+    def set_passed(self, is_passed):
+        self.passed = is_passed
 
     def move(self):
         """
