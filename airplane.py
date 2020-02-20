@@ -69,7 +69,7 @@ class Airplane:
         """
         # Rotate image around its center
         rotated_img = pygame.transform.rotate(self.img, self.tilt)
-        # new_rect = rotated_img.get_rect(center=self.img.get_rect(topLeft=(self.x, self.y)).center)
+        # FIXME: new_rect = rotated_img.get_rect(center=self.img.get_rect(topLeft=(self.x, self.y)).center)
         window.blit(rotated_img, (self.x, self.y))
 
     def get_mask(self):
