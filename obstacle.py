@@ -57,4 +57,24 @@ class Obstacle:
         :param airplane: Airplane object
         :return:
         """
-        pass
+        airplane_mask = airplane.get_mask()
+        top_mask = pygame.mask.from_surface(self.PIPE_TOP)
+        bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
+
+        # Distance between two top left-hand corners
+        top_offset = (self.x - airplane.get_x(), self.top - round(airplane.get_y()))
+        # Distance between two bottom left-hand corners
+        bottom_offset = (self.x - airplane.get_x(), self.bottom - round(airplane.get_y()))
+
+        # Determine point of overlap between airplane and bottom pipe
+        b_point = airplane_mask.overlap(bottom_mask, bottom_offset)
+        # Determine the point of overlap between airplane and top pipe
+        t_point = airplane_mask.overlap(top_mask, top_offset)
+
+        # Check if collision has occurred
+        if b_point or t_point:
+            # Collision has occurred
+            return True
+        else:
+            # No collision
+            return False
