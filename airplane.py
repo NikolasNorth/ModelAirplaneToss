@@ -22,6 +22,12 @@ class Airplane:
         self.velocity = 0
         self.height = self.y
 
+    def get_x(self):
+        return self.x
+
+    def get_y(self):
+        return self.y
+
     def jump(self):
         """
         Make airplane 'jump' to a higher elevation
