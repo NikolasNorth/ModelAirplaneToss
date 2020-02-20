@@ -3,10 +3,10 @@ import os
 
 
 class Game:
-    def __init__(self, win_width, win_height, fps, bg_img, airplane_img, obstacle_img):
+    def __init__(self, win_width, win_height, fps, bg_img, airplane_img, obstacle_img, font_name):
         """
         Game constructor.
-        Initializes pygame, creates game window, creates Clock instance and loads image assets
+        Initializes pygame, initializes pygame font, creates game window, creates Clock instance and loads image assets
 
         :param win_width: Window width
         :param win_height: Window height
@@ -14,8 +14,11 @@ class Game:
         :param bg_img: Background image file name (with extension)
         :param airplane_img: Airplane image file name (with extension)
         :param obstacle_img: Obstacle image file name (with extension)
+        :param font_name: Name of desired font
         """
         pygame.init()
+        # pygame.font.init()
+        # self.font = pygame.font.SysFont(font_name, 50)
         self.win_width = win_width
         self.win_height = win_height
         self.window = pygame.display.set_mode((win_width, win_height))
@@ -51,3 +54,6 @@ class Game:
 
     def get_clock(self):
         return self.clock
+
+    def get_font(self):
+        return self.font
