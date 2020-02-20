@@ -2,15 +2,17 @@ import pygame
 import os
 from game import Game
 from airplane import Airplane
+from obstacle import Obstacle
 
 
 # TODO: After this function is called decrement bg_x and bg_x2 by 2
-def draw_window(window, airplane, bg_img, bg_x, bg_x2):
+def draw_window(window, airplane, obstacles, bg_img, bg_x, bg_x2):
     """
     Draw window for the game.
 
     :param window: Game window
     :param airplane: User airplane
+    :param obstacles: Obstacle
     :param bg_img: Background image already loaded using pygame.load() function
     :param bg_x: x-coordinate position for background image
     :param bg_x2: x-coordinate position for second background image
@@ -19,6 +21,10 @@ def draw_window(window, airplane, bg_img, bg_x, bg_x2):
     # Draw sliding background image on to game window
     window.blit(bg_img, (bg_x, 0))
     window.blit(bg_img, (bg_x2, 0))
+
+    # Draw moving pipe on to game window
+    for obstacle in obstacles:
+        obstacle.draw(window)
 
     # Draw airplane (with tilting and rotation) on to game window
     airplane.draw(window)
@@ -40,12 +46,15 @@ def main():
     AIRPLANES = [
         os.path.join('assets', 'user-airplane-1.png')
     ]
-    OBSTACLE = []
+    OBSTACLE = [
+        os.path.join('assets', 'obstacle-1.png')
+    ]
 
     # Initialize Game
-    game = Game(WIN_WIDTH, WIN_HEIGHT, FPS, BG_IMGS[0], AIRPLANES[0])
+    game = Game(WIN_WIDTH, WIN_HEIGHT, FPS, BG_IMGS[0], AIRPLANES[0], OBSTACLE[0])
 
     airplane = Airplane(game.get_airplane_img(), 200, 200)
+    obstacles = [Obstacle(game.get_obstacle_img(), 700)]
     window = game.get_window()
     clock = game.get_clock()
 
@@ -59,7 +68,9 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
         airplane.move()
-        draw_window(window, airplane, game.get_bg_img(), bg_x, bg_x2)
+        for obstacle in obstacles:
+            obstacle.move()
+        draw_window(window, airplane, obstacles, game.get_bg_img(), bg_x, bg_x2)
         bg_x -= 2
         bg_x2 -= 2
         if bg_x < -game.get_window_width():
