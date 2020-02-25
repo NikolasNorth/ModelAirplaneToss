@@ -213,15 +213,15 @@ if __name__ == '__main__':
 
     # Background images
     BG_IMGS = [
-        os.path.join('assets', 'background-1.png')
+        'background-1.png'
     ]
     # Airplane images
     airplanes = [
-        os.path.join('assets', 'user-airplane-1.png')
+        'user-airplane-1.png'
     ]
     # Obstacle images
     OBSTACLE = [
-        os.path.join('assets', 'obstacle-1.png')
+        'obstacle-1.png'
     ]
 
     # Setup game settings
