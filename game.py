@@ -1,12 +1,12 @@
 import pygame
-import os
 
 
 class Game:
     def __init__(self, win_width, win_height, fps, bg_img, airplane_img, obstacle_img, font_name):
         """
         Game constructor.
-        Initializes pygame, initializes pygame font, creates game window, creates Clock instance and loads image assets
+        Initializes pygame, initializes pygame font, creates game window, creates Clock instance and loads image assets.
+        Provides logic for the welcome screen.
 
         :param win_width: Window width
         :param win_height: Window height
@@ -17,8 +17,8 @@ class Game:
         :param font_name: Name of desired font
         """
         pygame.init()
-        # pygame.font.init()
-        # self.font = pygame.font.SysFont(font_name, 50)
+        pygame.font.init()
+        self.font = pygame.font.SysFont(font_name, 50)
         self.win_width = win_width
         self.win_height = win_height
         self.window = pygame.display.set_mode((win_width, win_height))
@@ -30,6 +30,8 @@ class Game:
         self.airplane_img = pygame.image.load(airplane_img).convert_alpha()
         self.obstacle_img = pygame.image.load(obstacle_img).convert_alpha()
         self.clock = pygame.time.Clock()
+        self.score = 0
+        self.start = False
 
     def get_window_width(self):
         return self.win_width
@@ -57,3 +59,18 @@ class Game:
 
     def get_font(self):
         return self.font
+
+    def get_score(self):
+        return self.score
+
+    def increment_score(self):
+        self.score += 1
+
+    def reset_score(self):
+        self.score = 0
+
+    def get_start(self):
+        return self.start
+
+    def set_start(self, is_start):
+        self.start = is_start

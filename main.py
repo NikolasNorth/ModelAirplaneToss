@@ -1,12 +1,98 @@
 import pygame
 import os
+import sys
 from game import Game
 from airplane import Airplane
 from obstacle import Obstacle
 
 
-# TODO: After this function is called decrement bg_x and bg_x2 by 2
-def draw_window(window, airplane, obstacles, bg_img, bg_x, bg_x2):
+def welcome_screen(game):
+    """
+    Display welcome screen on to window.
+
+    :param game: Game object
+    :return:
+    """
+    # Main title
+    main_x = 10
+    main_y = 10
+    msg_main = game.get_font().render("Model Airplane Toss", 1, (255, 255, 255))
+
+    # Subtitle
+    sub_x = 10
+    sub_y = game.get_window_height() - 30
+    msg_sub = game.get_font().render("Press space bar to start!", 1, (255, 255, 255))
+
+    # Game loop
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    # Start the game
+                    game.set_start(True)
+                    return
+            else:
+                # Set background screen to black
+                game.get_window().fill((0, 0, 0))
+
+                # Display messages on to screen
+                game.get_window().blit(msg_main, (main_x, main_y))
+                game.get_window().blit(msg_sub, (sub_x, sub_y))
+
+                # Update game window
+                pygame.display.update()
+
+
+def game_over_screen(game):
+    """
+    Display game over screen on to window.
+
+    :param game: Game object
+    :return:
+    """
+    # Score message
+    score_x = 10
+    score_y = 10
+    score_msg = game.get_font().render("Final Score: " + str(game.get_score()), 1, (255, 255, 255))
+
+    # Restart game message
+    restart_x = 10
+    restart_y = game.get_window_height() - 100
+    restart_msg = game.get_font().render("To play again, click the space bar!", 1, (255, 255, 255))
+
+    # Game loop
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                # Close game window
+                run = False
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    # Restart game
+                    game.set_start(True)
+                    return
+            else:
+                # Set background colour to black
+                game.get_window().fill((0, 0, 0))
+
+                # Display score on to screen
+                game.get_window().blit(score_msg, (score_x, score_y))
+
+                # Display restart message on to screen
+                game.get_window().blit(restart_msg, (restart_x, restart_y))
+
+                # Update game window
+                pygame.display.update()
+
+
+def draw_window(window, airplane, obstacles, bg_img, bg_x, bg_x2, font, score):
     """
     Draw window for the game.
 
@@ -32,48 +118,42 @@ def draw_window(window, airplane, obstacles, bg_img, bg_x, bg_x2):
     airplane.draw(window)
 
     # Draw score on to game window
-    # msg = font.render("Score: " + str(score), 1, (255, 255, 255))
-    # window.blit(msg, (10, 10))
+    msg = font.render("Score: " + str(score), 1, (255, 255, 255))
+    window.blit(msg, (10, 10))
 
     # Update game window
     pygame.display.update()
 
 
-def main():
-    # Define window height and width
-    WIN_WIDTH = 800
-    WIN_HEIGHT = 600
-    FPS = 30
+def main(game):
+    """
+    Main game logic.
 
-    # Image file path's
-    BG_IMGS = [
-        os.path.join('assets', 'background-1.png')
-    ]
-    AIRPLANES = [
-        os.path.join('assets', 'user-airplane-1.png')
-    ]
-    OBSTACLE = [
-        os.path.join('assets', 'obstacle-1.png')
-    ]
-
-    # Initialize Game
-    game = Game(WIN_WIDTH, WIN_HEIGHT, FPS, BG_IMGS[0], AIRPLANES[0], OBSTACLE[0], "comicsans")
-
+    :param game: Game object
+    :return:
+    """
     airplane = Airplane(game.get_airplane_img(), 200, 200)
     obstacles = [Obstacle(game.get_obstacle_img(), 700)]
     window = game.get_window()
     clock = game.get_clock()
-    # font = game.get_font()
+    font = game.get_font()
 
-    run = True
+    # Define position of sliding background images
     bg_x = 0
     bg_x2 = game.get_window_width()
-    score = 0
-    is_jump = False
+
+    # Start game
+    run = True
     while run:
         is_jump = False
-        # Main game loop
         clock.tick(FPS)  # Limit game loop to 30 iterations per second
+
+        # Check if airplane has fallen off screen
+        if airplane.get_y() <= 0 or airplane.get_y() >= game.get_window_height():
+            # Game over. Go to game over screen
+            run = False
+            return
+        # Process user input from keyboard
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -83,10 +163,14 @@ def main():
                     is_jump = True
         if not is_jump:
             airplane.move()
+
+        # Generate obstacle
         add_obstacle = False
         for obstacle in obstacles:
             if obstacle.collide(airplane):
-                print("collision")
+                # Airplane hit obstacle. Go to game over screen
+                run = False
+                return
             if not obstacle.get_passed() and obstacle.get_x() < airplane.get_x():
                 # Obstacle has been successfully passed, set flag to generate new obstacle
                 obstacle.set_passed(True)
@@ -94,19 +178,42 @@ def main():
             obstacle.move()
         if add_obstacle:
             # Generate a new obstacle and increment score by 1
-            score += 1
+            game.increment_score()
             obstacles.append(Obstacle(game.get_obstacle_img(), 700))
-        draw_window(window, airplane, obstacles, game.get_bg_img(), bg_x, bg_x2)
-        # draw_window(window, airplane, obstacles, game.get_bg_img(), bg_x, bg_x2, font, score)
+
+        # Update game window with changes
+        draw_window(window, airplane, obstacles, game.get_bg_img(), bg_x, bg_x2, font, game.get_score())
+
+        # Sliding background
         bg_x -= 2
         bg_x2 -= 2
         if bg_x < -game.get_window_width():
             bg_x = game.get_window_width()
         if bg_x2 < -game.get_window_width():
             bg_x2 = game.get_window_width()
+    pygame.quit()
 
 
 if __name__ == '__main__':
-    # TODO: Implement welcome_screen method
-    # TODO: Add logic to delay the start of the game when user presses space bar (similar to flappybird.io)
-    main()
+    # Define window height and width
+    WIN_WIDTH = 800
+    WIN_HEIGHT = 600
+    FPS = 30
+
+    # Image file path's
+    BG_IMGS = [
+        os.path.join('assets', 'background-1.png')
+    ]
+    airplanes = [
+        os.path.join('assets', 'user-airplane-1.png')
+    ]
+    OBSTACLE = [
+        os.path.join('assets', 'obstacle-1.png')
+    ]
+
+    # Set game settings
+    game_settings = Game(WIN_WIDTH, WIN_HEIGHT, FPS, BG_IMGS[0], airplanes[0], OBSTACLE[0], "comicsans")
+
+    # Launch game
+    welcome_screen(game_settings)
+    main(game_settings)
