@@ -26,6 +26,8 @@ def welcome_screen(game):
     # Game loop
     run = True
     while run:
+        game.get_clock().tick(game.get_fps())
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -33,7 +35,7 @@ def welcome_screen(game):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     # Start the game
-                    game.set_start(True)
+                    game.set_game_in_session(True)
                     return
             else:
                 # Set background screen to black
@@ -67,6 +69,9 @@ def game_over_screen(game):
     # Game loop
     run = True
     while run:
+        game.get_clock().tick(game.get_fps())
+
+        # Ask user if they want to quit or restart game
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 # Close game window
@@ -76,7 +81,8 @@ def game_over_screen(game):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     # Restart game
-                    game.set_start(True)
+                    game.set_game_in_session(True)
+                    game.reset_score()
                     return
             else:
                 # Set background colour to black
@@ -148,15 +154,13 @@ def main(game):
         is_jump = False
         clock.tick(FPS)  # Limit game loop to 30 iterations per second
 
-        # Check if airplane has fallen off screen
-        if airplane.get_y() <= 0 or airplane.get_y() >= game.get_window_height():
-            # Game over. Go to game over screen
-            run = False
-            return
         # Process user input from keyboard
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                # Close the game window
                 run = False
+                pygame.quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     airplane.jump()
@@ -164,12 +168,20 @@ def main(game):
         if not is_jump:
             airplane.move()
 
+        # Check if airplane has fallen off screen
+        if airplane.get_y() <= 0 or airplane.get_y() >= game.get_window_height():
+            # Game over. Go to game over screen
+            run = False
+            game.set_game_in_session(False)
+            return
+
         # Generate obstacle
         add_obstacle = False
         for obstacle in obstacles:
             if obstacle.collide(airplane):
                 # Airplane hit obstacle. Go to game over screen
                 run = False
+                game.set_game_in_session(False)
                 return
             if not obstacle.get_passed() and obstacle.get_x() < airplane.get_x():
                 # Obstacle has been successfully passed, set flag to generate new obstacle
@@ -191,29 +203,34 @@ def main(game):
             bg_x = game.get_window_width()
         if bg_x2 < -game.get_window_width():
             bg_x2 = game.get_window_width()
-    pygame.quit()
 
 
 if __name__ == '__main__':
-    # Define window height and width
+    # Define window height, window width and frames per second
     WIN_WIDTH = 800
     WIN_HEIGHT = 600
     FPS = 30
 
-    # Image file path's
+    # Background images
     BG_IMGS = [
         os.path.join('assets', 'background-1.png')
     ]
+    # Airplane images
     airplanes = [
         os.path.join('assets', 'user-airplane-1.png')
     ]
+    # Obstacle images
     OBSTACLE = [
         os.path.join('assets', 'obstacle-1.png')
     ]
 
-    # Set game settings
+    # Setup game settings
     game_settings = Game(WIN_WIDTH, WIN_HEIGHT, FPS, BG_IMGS[0], airplanes[0], OBSTACLE[0], "comicsans")
 
     # Launch game
     welcome_screen(game_settings)
-    main(game_settings)
+    while True:
+        if game_settings.get_game_in_session():
+            main(game_settings)
+        else:
+            game_over_screen(game_settings)

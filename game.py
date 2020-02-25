@@ -31,7 +31,7 @@ class Game:
         self.obstacle_img = pygame.image.load(obstacle_img).convert_alpha()
         self.clock = pygame.time.Clock()
         self.score = 0
-        self.start = False
+        self.game_in_session = False
 
     def get_window_width(self):
         return self.win_width
@@ -69,8 +69,8 @@ class Game:
     def reset_score(self):
         self.score = 0
 
-    def get_start(self):
-        return self.start
+    def get_game_in_session(self):
+        return self.game_in_session
 
-    def set_start(self, is_start):
-        self.start = is_start
+    def set_game_in_session(self, is_game_in_session):
+        self.game_in_session = is_game_in_session
