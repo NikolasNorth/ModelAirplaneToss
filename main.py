@@ -32,6 +32,7 @@ def welcome_screen(game):
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
+                sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     # Start the game
@@ -213,15 +214,15 @@ if __name__ == '__main__':
 
     # Background images
     BG_IMGS = [
-        'background-1.png'
+        os.path.join('assets', 'background-1.png')
     ]
     # Airplane images
     airplanes = [
-        'user-airplane-1.png'
+        os.path.join('assets', 'user-airplane-1.png')
     ]
     # Obstacle images
     OBSTACLE = [
-        'obstacle-1.png'
+        os.path.join('assets', 'obstacle-1.png')
     ]
 
     # Setup game settings
